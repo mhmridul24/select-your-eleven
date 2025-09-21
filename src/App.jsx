@@ -1,28 +1,28 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { Suspense, useState } from "react";
 import "./App.css";
-import navImg from "./assets/logo.png";
-import dollarImg from "./assets/dollar.png";
+
+import AvailablePlayers from "./components/availablePlayers/AvailablePlayers";
+import SelectedPlayers from "./components/SelectedPlayers/SelectedPlayers";
+import Navbar from "./components/Navbar/Navbar";
+
+const fetchPlayers = async () =>{
+  const res = await fetch("/players.json")
+  return res.json()
+}
 
 function App() {
-  const [count, setCount] = useState(0);
+
+  const playersPromise = fetchPlayers()
 
   return (
     <>
-      <div className="navbar max-w-[1200px] mx-auto ">
-        <div className="flex-none"></div>
-        <div className="flex-1">
-          <a className="btn btn-ghost text-xl">
-            <img className="w-[60px] h-[60px]" src={navImg} alt="" />
-          </a>
-        </div>
-        <div className="flex items-center">
-          <span className="mr-1">6000000 </span>
-          <span className="mr-1">Coin</span>
-          <img className="w-[20px] h-[20px]" src={dollarImg} alt="" />
-        </div>
-      </div>
+    <Navbar></Navbar>
+    <Suspense fallback={<span className="loading loading-spinner loading-xl"></span>}>
+      <AvailablePlayers playersPromise = {playersPromise} ></AvailablePlayers>
+    </Suspense>
+    {/* <SelectedPlayers></SelectedPlayers> */}
+
+
     </>
   );
 }
